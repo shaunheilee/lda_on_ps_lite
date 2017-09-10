@@ -1,0 +1,81 @@
+///  @file   config.proto
+///  @brief  configuration for lda 
+
+package dmlc.lda;
+
+message Config {
+
+  /// --  basic settings - input & output  --
+
+  /// The training data, can be either a directory or a wildcard filename
+  optional string train_data = 1;
+
+  optional string val_data = 2;
+  /// data format. supports libsvm, crb, criteo, adfea, ...
+  optional string data_format = 4 [default = "libsvm"];
+
+  /// model output filename
+  optional string model_out = 5;
+
+  /// model input filename
+  optional string model_in = 7;
+
+  /// lda alpha
+  optional float  alpha = 9;
+  
+  /// lda beta
+  optional float  beta = 10;
+
+  /// lda topic k
+  optional int32    topic_num = 11;
+  /// lda words num
+  optional int32    words_num = 12;
+
+  optional string predict_out = 13;
+
+  /// the size of minibatch. the smaller, the faster the convergence, but the
+  /// slower the system performance
+  optional int32 minibatch = 22 [default = 1000];
+
+  /// the maximal number of data passes
+  optional int32 max_data_pass= 23 [default = 10];
+
+  /// save model for every k data pass. default is -1, which only saves for the
+  /// last iteration
+  optional int32 save_iter = 6 [default = -1];
+
+  /// load model from the k-th iteration. default is -1, which loads the last
+  /// iteration model
+  optional int32 load_iter = 8 [default = -1];
+
+  /// give a worker the data only if it can access. often used when the data has
+  /// been dispatched to workers' local filesystem
+  optional bool local_data = 101 [default = false];
+
+  /// virtually partition a file into n parts for better loadbalance. default is 10
+  optional int32 num_parts_per_file = 102 [default = 2];
+
+  /// - learning -
+
+  /// print the progress every n sec during training. 1 sec in default
+  optional float print_sec = 111 [default = 1];
+
+  /// number of threads used by a worker / a server. 2 in default
+  optional int32 num_threads = 121 [default = 2];
+
+  /// the maximal concurrent minibatches being processing at the same time for
+  /// sgd, and the maximal concurrent blocks for block CD. 2 in default.
+  optional int32 max_concurrency = 122 [default = 2];
+
+  /// cache the key list on both sender and receiver to reduce communication
+  /// cost. it may increase the memory usage
+  optional bool key_cache = 123 [default = true];
+
+  /// compression the message to reduce communication cost. it may increase the
+  /// computation cost.
+  optional bool msg_compression = 124 [default = true];
+
+  /// convert floating-points into fixed-point integers with n bytes. n can be 1,
+  /// 2 and 3. 0 means no compression.
+  optional int32 fixed_bytes = 125 [default = 0];
+}
